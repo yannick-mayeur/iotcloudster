@@ -1,0 +1,12 @@
+version: '2'
+services:
+    iotcloudster-app:
+        scale: 1
+    iotcloudster-mysql:
+        scale: 1
+    iotcloudster-elasticsearch:
+        scale: 1
+    
+
+
+

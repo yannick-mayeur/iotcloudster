@@ -27,6 +27,14 @@
     "clientPackageManager": "yarn",
     "testFrameworks": [],
     "jhiPrefix": "jhi",
-    "enableTranslation": false
+    "enableTranslation": false,
+    "appsFolders": [
+      "new-iotcloudster"
+    ],
+    "directoryPath": "../",
+    "monitoring": "no",
+    "dockerRepositoryName": "yannickmayeur",
+    "dockerPushCommand": "docker push",
+    "enableRancherLoadBalancing": false
   }
 }
