@@ -13,6 +13,9 @@ import { IEvent } from 'app/shared/model/event.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
+import { Chart } from 'primereact/chart';
+import moment from 'moment';
+
 export interface IEventProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export interface IEventState {
@@ -45,6 +48,30 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
   render() {
     const { eventList, match } = this.props;
+
+    const data = {
+      labels: [],
+      datasets: [
+        {
+          label: 'Dataset',
+          data: [],
+          fill: false,
+          borderColor: '#4bc0c0'
+        }
+      ]
+    };
+
+    let index = -1;
+    eventList.forEach(element => {
+      index = data.labels.indexOf(element.published_at);
+      if (index > -1) {
+        data.datasets[0].data[index] = data.datasets[0].data[index] + 1;
+      } else {
+        data.labels.push(element.published_at);
+        data.datasets[0].data.push(1);
+      }
+    });
+
     return (
       <div>
         <h2 id="event-heading">
@@ -111,6 +138,19 @@ export class Event extends React.Component<IEventProps, IEventState> {
               ))}
             </tbody>
           </Table>
+        </div>
+        <div className="content-section introduction">
+          <div className="feature-intro">
+            <h1>LineChart</h1>
+            <p>
+              A line chart or line graph is a type of chart which displays information as a series of data points called 'markers' connected
+              by straight line segments.
+            </p>
+          </div>
+        </div>
+
+        <div className="content-section implementation">
+          <Chart type="line" data={data} />
         </div>
       </div>
     );
