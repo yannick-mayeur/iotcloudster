@@ -1,0 +1,25 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "event",
+            "otherEntityName": "event",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "device"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "core_id",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180726125901",
+    "dto": "no",
+    "searchEngine": "elasticsearch",
+    "service": "no",
+    "entityTableName": "device",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

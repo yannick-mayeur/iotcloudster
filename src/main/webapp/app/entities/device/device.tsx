@@ -4,26 +4,23 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, InputGroup, Col, Row, Table } from 'reactstrap';
 import { AvForm, AvGroup, AvInput } from 'availity-reactstrap-validation';
 // tslint:disable-next-line:no-unused-variable
-import { ICrudSearchAction, ICrudGetAllAction, TextFormat } from 'react-jhipster';
+import { ICrudSearchAction, ICrudGetAllAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getSearchEntities, getEntities } from './event.reducer';
-import { IEvent } from 'app/shared/model/event.model';
+import { getSearchEntities, getEntities } from './device.reducer';
+import { IDevice } from 'app/shared/model/device.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
-import { Chart } from 'primereact/chart';
-import moment from 'moment';
+export interface IDeviceProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export interface IEventProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
-
-export interface IEventState {
+export interface IDeviceState {
   search: string;
 }
 
-export class Event extends React.Component<IEventProps, IEventState> {
-  state: IEventState = {
+export class Device extends React.Component<IDeviceProps, IDeviceState> {
+  state: IDeviceState = {
     search: ''
   };
 
@@ -47,39 +44,13 @@ export class Event extends React.Component<IEventProps, IEventState> {
   handleSearch = event => this.setState({ search: event.target.value });
 
   render() {
-    const { eventList, match } = this.props;
-
-    const data = {
-      labels: [],
-      datasets: [
-        {
-          label: 'Dataset',
-          data: [],
-          fill: false,
-          borderColor: '#4bc0c0'
-        }
-      ]
-    };
-
-    let index = -1;
-    let date;
-    eventList.forEach(element => {
-      date = moment(element.published_at).format('DD/MM/YYYY');
-      index = data.labels.indexOf(date);
-      if (index > -1) {
-        data.datasets[0].data[index] = data.datasets[0].data[index] + 1;
-      } else {
-        data.labels.push(date);
-        data.datasets[0].data.push(1);
-      }
-    });
-
+    const { deviceList, match } = this.props;
     return (
       <div>
-        <h2 id="event-heading">
-          Events
+        <h2 id="device-heading">
+          Devices
           <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-            <FontAwesomeIcon icon="plus" />&nbsp; Create new Event
+            <FontAwesomeIcon icon="plus" />&nbsp; Create new Device
           </Link>
         </h2>
         <Row>
@@ -104,36 +75,28 @@ export class Event extends React.Component<IEventProps, IEventState> {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Data</th>
-                <th>Published At</th>
-                <th>Device</th>
+                <th>Core Id</th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {eventList.map((event, i) => (
+              {deviceList.map((device, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
-                    <Button tag={Link} to={`${match.url}/${event.id}`} color="link" size="sm">
-                      {event.id}
+                    <Button tag={Link} to={`${match.url}/${device.id}`} color="link" size="sm">
+                      {device.id}
                     </Button>
                   </td>
-                  <td>{event.name}</td>
-                  <td>{event.data}</td>
-                  <td>
-                    <TextFormat type="date" value={event.published_at} format={APP_DATE_FORMAT} />
-                  </td>
-                  <td>{event.device ? <Link to={`device/$event.device.id}`}>{event.device.id}</Link> : ''}</td>
+                  <td>{device.core_id}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${event.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`${match.url}/${device.id}`} color="info" size="sm">
                         <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${event.id}/edit`} color="primary" size="sm">
+                      <Button tag={Link} to={`${match.url}/${device.id}/edit`} color="primary" size="sm">
                         <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
                       </Button>
-                      <Button tag={Link} to={`${match.url}/${event.id}/delete`} color="danger" size="sm">
+                      <Button tag={Link} to={`${match.url}/${device.id}/delete`} color="danger" size="sm">
                         <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Delete</span>
                       </Button>
                     </div>
@@ -143,26 +106,13 @@ export class Event extends React.Component<IEventProps, IEventState> {
             </tbody>
           </Table>
         </div>
-        <div className="content-section introduction">
-          <div className="feature-intro">
-            <h1>LineChart</h1>
-            <p>
-              A line chart or line graph is a type of chart which displays information as a series of data points called 'markers' connected
-              by straight line segments.
-            </p>
-          </div>
-        </div>
-
-        <div className="content-section implementation">
-          <Chart type="line" data={data} />
-        </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ event }: IRootState) => ({
-  eventList: event.entities
+const mapStateToProps = ({ device }: IRootState) => ({
+  deviceList: device.entities
 });
 
 const mapDispatchToProps = {
@@ -176,4 +126,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Event);
+)(Device);

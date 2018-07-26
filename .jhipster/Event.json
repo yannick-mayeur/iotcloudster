@@ -1,7 +1,14 @@
 {
     "fluentMethods": true,
     "clientRootFolder": "",
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "device",
+            "otherEntityName": "device",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",

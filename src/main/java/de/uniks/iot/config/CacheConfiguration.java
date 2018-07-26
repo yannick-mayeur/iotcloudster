@@ -39,6 +39,8 @@ public class CacheConfiguration {
             cm.createCache(de.uniks.iot.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(de.uniks.iot.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(de.uniks.iot.domain.Event.class.getName(), jcacheConfiguration);
+            cm.createCache(de.uniks.iot.domain.Device.class.getName(), jcacheConfiguration);
+            cm.createCache(de.uniks.iot.domain.Device.class.getName() + ".events", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

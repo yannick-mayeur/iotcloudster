@@ -8,6 +8,8 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipste
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
+import { IDevice } from 'app/shared/model/device.model';
+import { getEntities as getDevices } from 'app/entities/device/device.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './event.reducer';
 import { IEvent } from 'app/shared/model/event.model';
 // tslint:disable-next-line:no-unused-variable
@@ -18,12 +20,14 @@ export interface IEventUpdateProps extends StateProps, DispatchProps, RouteCompo
 
 export interface IEventUpdateState {
   isNew: boolean;
+  deviceId: number;
 }
 
 export class EventUpdate extends React.Component<IEventUpdateProps, IEventUpdateState> {
   constructor(props) {
     super(props);
     this.state = {
+      deviceId: 0,
       isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
@@ -34,6 +38,8 @@ export class EventUpdate extends React.Component<IEventUpdateProps, IEventUpdate
     } else {
       this.props.getEntity(this.props.match.params.id);
     }
+
+    this.props.getDevices();
   }
 
   saveEntity = (event, errors, values) => {
@@ -59,8 +65,25 @@ export class EventUpdate extends React.Component<IEventUpdateProps, IEventUpdate
     this.props.history.push('/entity/event');
   };
 
+  deviceUpdate = element => {
+    const id = element.target.value.toString();
+    if (id === '') {
+      this.setState({
+        deviceId: -1
+      });
+    } else {
+      for (const i in this.props.devices) {
+        if (id === this.props.devices[i].id.toString()) {
+          this.setState({
+            deviceId: this.props.devices[i].id
+          });
+        }
+      }
+    }
+  };
+
   render() {
-    const { eventEntity, loading, updating } = this.props;
+    const { eventEntity, devices, loading, updating } = this.props;
     const { isNew } = this.state;
 
     return (
@@ -106,6 +129,19 @@ export class EventUpdate extends React.Component<IEventUpdateProps, IEventUpdate
                     value={isNew ? null : convertDateTimeFromServer(this.props.eventEntity.published_at)}
                   />
                 </AvGroup>
+                <AvGroup>
+                  <Label for="device.id">Device</Label>
+                  <AvInput id="event-device" type="select" className="form-control" name="device.id" onChange={this.deviceUpdate}>
+                    <option value="" key="0" />
+                    {devices
+                      ? devices.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.id}
+                          </option>
+                        ))
+                      : null}
+                  </AvInput>
+                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/event" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />&nbsp;
                   <span className="d-none d-md-inline">Back</span>
@@ -124,12 +160,14 @@ export class EventUpdate extends React.Component<IEventUpdateProps, IEventUpdate
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
+  devices: storeState.device.entities,
   eventEntity: storeState.event.entity,
   loading: storeState.event.loading,
   updating: storeState.event.updating
 });
 
 const mapDispatchToProps = {
+  getDevices,
   getEntity,
   updateEntity,
   createEntity,

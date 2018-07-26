@@ -1,5 +1,6 @@
 package de.uniks.iot.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -33,6 +34,10 @@ public class Event implements Serializable {
 
     @Column(name = "published_at")
     private Instant published_at;
+
+    @ManyToOne
+    @JsonIgnoreProperties("")
+    private Device device;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -80,6 +85,19 @@ public class Event implements Serializable {
 
     public void setPublished_at(Instant published_at) {
         this.published_at = published_at;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public Event device(Device device) {
+        this.device = device;
+        return this;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
