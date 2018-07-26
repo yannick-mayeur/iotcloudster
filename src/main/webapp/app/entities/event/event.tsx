@@ -62,12 +62,14 @@ export class Event extends React.Component<IEventProps, IEventState> {
     };
 
     let index = -1;
+    let date;
     eventList.forEach(element => {
-      index = data.labels.indexOf(element.published_at);
+      date = moment(element.published_at).format('DD/MM/YYYY');
+      index = data.labels.indexOf(date);
       if (index > -1) {
         data.datasets[0].data[index] = data.datasets[0].data[index] + 1;
       } else {
-        data.labels.push(element.published_at);
+        data.labels.push(date);
         data.datasets[0].data.push(1);
       }
     });
