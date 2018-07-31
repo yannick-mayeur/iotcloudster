@@ -51,27 +51,39 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
     const data = {
       labels: [],
-      datasets: [
-        {
-          label: 'Dataset',
-          data: [],
-          fill: false,
-          borderColor: '#4bc0c0'
-        }
-      ]
+      datasets: []
     };
 
-    let index = -1;
+    let dateIndex = -1;
     let date;
+    const devices = [];
+    let deviceIndex = -1;
     eventList.forEach(element => {
       date = moment(element.published_at).format('DD/MM/YYYY');
-      index = data.labels.indexOf(date);
-      if (index > -1) {
-        data.datasets[0].data[index] = data.datasets[0].data[index] + 1;
-      } else {
-        data.labels.push(date);
-        data.datasets[0].data.push(1);
+      dateIndex = data.labels.indexOf(date);
+      deviceIndex = devices.indexOf(element.device.core_id);
+
+      // creating a dataset for device if not exists
+      if (deviceIndex <= -1) {
+        deviceIndex = devices.push(element.device.core_id) - 1;
+        data.datasets.push({
+          label: 'Dataset ' + element.device.core_id,
+          data: [],
+          fill: false,
+          borderColor: '#' + Math.floor(Math.random() * 0xffffff).toString(16)
+        });
+        for (const elem of data.labels) {
+          data.datasets[deviceIndex].data.push(0);
+        }
       }
+
+      if (dateIndex <= -1) {
+        dateIndex = data.labels.push(date) - 1;
+        data.datasets.forEach(dataset => {
+          dataset.data.push(0);
+        });
+      }
+      data.datasets[deviceIndex].data[dateIndex] += 1;
     });
 
     return (
